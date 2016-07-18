@@ -8,7 +8,7 @@ The project is an evaluation of current drug shortages reported by the FDA.  The
  Although the figures are provided below, the complete proposal, with all text, figures and tables, is present in the [challenge3.md markdown file](https://github.com/b3berg/DIchallenge/blob/master/challenge3.md). Please refer to that document for your assessment.
 
 ## Project Code
-For the full code utilized for the analysis, please refer to the [challenge3.rmd Rmarkdownfile](https://github.com/b3berg/DIchallenge/blob/master/challenge3.rmd).  
+For the full code utilized for the analysis, please refer to the [challenge3.rmd Rmarkdownfile](https://github.com/b3berg/DIchallenge/blob/master/challenge3.Rmd).  
 
 ## Figures
 ### Figure 1
