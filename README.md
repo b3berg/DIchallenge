@@ -5,6 +5,6 @@
 
 ## Project Overview  
 
-The full project assessment was generated using R as implemented via Rstudio.  Please refer to the [Rmarkdown .html file](https://github.com/b3berg/DIchallenge/blob/master/challenge3.html)
+The full project assessment was generated using R as implemented via Rstudio.  The proposal, complete with both figures and tables, is present in the [challenge3.md](https://github.com/b3berg/DIchallenge/blob/master/challenge3.rmd).  For the full code utilized for the analysis, please refer to the [challenge3.rmd Rmarkdownfile](https://github.com/b3berg/DIchallenge/blob/master/challenge3.rmd)
 
 
