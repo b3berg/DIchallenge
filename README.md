@@ -11,13 +11,23 @@ The project is an evaluation of current drug shortages reported by the FDA.  The
 For the full code utilized for the analysis, please refer to the [challenge3.rmd Rmarkdownfile](https://github.com/b3berg/DIchallenge/blob/master/challenge3.rmd).  
 
 ## Figures
-
-[Figure 1](https://github.com/b3berg/DIchallenge/blob/master/challenge3_files/figure-html/plot1-1.png)
-[Figure 2](https://github.com/b3berg/DIchallenge/blob/master/challenge3_files/figure-html/shortage-1.png)
-[Figure 3](https://github.com/b3berg/DIchallenge/blob/master/challenge3_files/figure-html/unnamed-chunk-3-1.png)
-[Figure 4](https://github.com/b3berg/DIchallenge/blob/master/challenge3_files/figure-html/unnamed-chunk-6-1.png)
-[Figure 5](https://github.com/b3berg/DIchallenge/blob/master/challenge3_files/figure-html/unnamed-chunk-7-1.png)
-[Figure 6](https://github.com/b3berg/DIchallenge/blob/master/challenge3_files/figure-html/unnamed-chunk-8-1.png)
+### Figure 1
+![](challenge3_files/figure-html/plot1-1.png)
+  
+### Figure 2
+![](challenge3_files/figure-html/shortage-1.png)
+ 
+### Figure 3
+![](challenge3_files/figure-html/unnamed-chunk-3-1.png)
+ 
+### Figure 4
+![](challenge3_files/figure-html/unnamed-chunk-6-1.png)
+ 
+### Figure 5
+![](challenge3_files/figure-html/unnamed-chunk-7-1.png)
+ 
+### Figure 6
+![](challenge3_files/figure-html/unnamed-chunk-8-1.png)
 
 
 
