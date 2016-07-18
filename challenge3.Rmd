@@ -1,0 +1,457 @@
+---
+title: "DI Challenge"
+author: "Alexander Berg, PharmD, PhD"
+date: "`r Sys.Date()`"
+output: 
+  html_document: 
+    fig_height: 6
+    fig_width: 8
+    keep_md: yes
+    theme: readable
+---
+
+```{r normalize_path, include=F, eval=F}
+# FOR INTERACTIVE USE
+# set this so can normalize wd from Rstudio project and when knitting
+# eg if your rmd is in /lab-notebook/<notebook>.Rmd
+# it should look like setwd(paste0(getwd(), "/lab-notebook/"))
+setwd(paste0(getwd(), "/notebook/"))
+```
+
+
+# Data Incubator Project Proposal
+
+## Project - Evaluation of market opportunity in U.S. drug shortages
+
+### Background  
+
+In the U.S., drug shortages represent a challenge to the delivery of adequate healthcare due to the lack of accessibility of drugs by prescribers and patients.  Drug shortages are considered a national healthcare risk and as such are tracked by the [U.S. Food and Drug Administration](http://www.fda.gov/Drugs/DrugSafety/DrugShortages/default.htm) in order to inform the public and help to prevent the interruption of drug delivery to patients. Moreover, drug shortages that arise secondary to market withdrawal by certain mainfacturers can result in a monopoly of goods, which can promote unethical pricing behavior as evidenced by the recent scandal involving [Turing Pharmaceuticals](http://fortune.com/2015/09/21/turing-pharmaceuticals-drug-prices-daraprim/).
+
+### Project Hypothesis
+
+As the majority of shortages occur for drugs that are off-patent, drug shortages represent a failure in the generic drug marketplace.  It is proposed in this project that drug shortages may in fact be an investment opportunity for generic drug manufacturers to diversify their product portfolio while serving the greater good by ensuring availablity of important drugs and promoting competition in the marketplace.
+
+#### Question 1 - What is the current status of drug shortages?
+
+In order to understand the current situation, drug shortage information was obtained by table scraping from the [U.S. Food and Drug Administration drug shortage website ](http://www.accessdata.fda.gov/scripts/drugshortages/default.cfm).  
+
+
+```{r shortage, echo=F,cache=T,warning=F,message=F}
+
+library(rvest)
+library(ggplot2)
+library(dplyr)
+
+#scrape shortages from FDA website
+shortage<-read_html("http://www.accessdata.fda.gov/scripts/drugshortages/default.cfm")%>%
+  html_nodes(css="td")
+
+#select drug names
+names<-html_text(shortage[seq(1,203,2)])
+
+#remove extras (bleed over from discontinued drugs table)
+names<-toupper(as.character(names[1:76]))
+
+#select drug shortage status
+status<-html_text(shortage[seq(2,202,2)])
+
+#remove extras (bleed over from discontinued drugs table)
+status<-as.character(status[1:76])
+status<-gsub("\r\n    \r\n    \t","",status)
+
+#combine into source DF
+short<-data.frame(drug=gsub(" \r\n    \t","",names),
+                     status=gsub(" \t\r\n\t\r\n    ","",status))
+
+#Calculate formulation
+short$form<-"Injection"
+short$form[grepl("NASAL",short$drug)]<-"Intranasal"
+short$form[grepl("ORAL SOLUTION",short$drug)|grepl("DIALYSIS SOLUTIONS",short$drug)]<-"Solution"
+short$form[grepl("TABLET",short$drug)]<-"Tablet"
+short$form[!(grepl("TABLET",short$drug))&grepl("CAPSULE",short$drug)]<-"Capsule"
+short$form[grepl("THIOLA",short$drug)]<-"Tablet"
+
+#duplicate which have multiple formulations
+temp<-short[which(grepl("TABLET",short$drug)==TRUE&grepl("CAPSULE",short$drug)==TRUE),]
+temp$form<- "Capsule"
+
+
+short<-short%>% bind_rows(temp)
+
+#Calculate stats
+short.stats<-short%>%group_by(form,status)%>%summarize(N=n())
+
+#Fill in missing (required for even bar sizes)
+missing<-data.frame(form=c("Intranasal","Solution"),status="Resolved",N=0)
+short.stats<-bind_rows(short.stats,missing)
+
+#Convert to factor for plotting
+short.stats$form<-factor(short.stats$form,
+                         levels=c("Intranasal","Solution","Capsule","Tablet","Injection"))
+
+short.stats$status<-factor(short.stats$status,
+                         levels=c("Currently in Shortage","Resolved"))
+
+## Make barchart showing current shortages 
+
+p1<-ggplot(short.stats,aes(x=form,y=N,fill=status))+geom_bar(stat="density",position="dodge")+
+    scale_fill_manual(values=c("orangered","blue"))+
+    ylab("Number of Drugs")+xlab("Type of Formulation")+
+    ggtitle("U.S. Drug Shortages per FDA website (June 16, 2016)")+
+    theme_bw()+
+    theme(text=element_text(size=15),
+          title=element_text(face="bold"),
+          legend.title=element_blank())
+
+```
+
+The overall number of current shortages indicated by the U.S. FDA is `r  sum(short.stats$N[short.stats$status!="Resolved"])` as of June 16, 2016 (Table 1).   
+  
+  
+  
+  
+##### Table 1: Drug shortages per U.S. FDA (June 16, 2016)
+
+```{r table1, cache=T,echo=F}
+
+knitr::kable(short[1:76,1:2],pad=0,caption = "")
+
+```
+
+It is apparent per the table that there is a large representation of drugs that are administered as an injection.  This is seen in the following figure:
+
+```{r plot1,cache=T,echo=F}
+print(p1)
+
+```
+
+  
+  
+The figure demonstrates that the vast majority of shortages are in injectable drugs.  However, it is also worth noting that the resolution status of the injectables is much lower than those for the capsules and tablets with only `r round(100*short.stats$N[short.stats$status=="Resolved"&short.stats$form=="Injection"]/sum(short.stats$N[short.stats$form=="Injection"]),1)`% of the total shortages resolved for injectables. 
+
+#### Question 2 - Are injectable drug approvals increasing to address drug shortages?
+
+The data of Figure 1 suggests that despite continued shortages, the ability to meet demand may not be as high in for injectable drugs as compared to other dosage forms.  In order to evaluate this hypothesis, it was considered that the FDA approvals would show a similar trend, such that less activity would be noted for injection drugs as compared to the other dosage forms.    
+
+To evaluate this, queries of the [openFDA labels database](https://open.fda.gov/drug/label/) were made to look at trends in regulatory labeling submissions as a surrogate for overall new drug applications.  Queries were made using the R package "openfda" in order to access the openFDA API.  The following queries were used:
+
+```{r echo=T,eval=F}
+#Obtain list of routes in the FDA database
+fda_query("/drug/label.json") %>%
+           fda_api_key(apikey) %>%
+           fda_count("openfda.route.exact")%>%
+           fda_exec()
+
+#Extract label submissions vs. time
+fda_query("/drug/label.json") %>%
+          fda_api_key(apikey) %>%
+          fda_filter("openfda.route.exact","route") %>%
+          fda_count("effective_time")%>%
+          fda_exec()
+```
+
+Following download, the data was truncated from 2009 (since start of the structured product labeling format used by openFDA) and the number of submissions by route of administration calculated per year.  The results of the queries are shown in the following figure, which highlights the two categories with the most activity, oral and topical drugs, from all other drugs: 
+
+```{r cache=T,echo=F,message=F,include=F}
+### Calculate proportion of new drug approvals that are injectables using openFDA API for r
+
+library(openfda)
+
+#set api key
+apikey<-"dK5geCG6DuWNK4RDY3im7vRKYRo1Yhb6PFwh3yiP"
+
+
+#Extract all "official" routes from open FDA
+routes <- invisible(fda_query("/drug/label.json") %>%
+               fda_api_key(apikey) %>%
+               fda_count("openfda.route.exact")%>%
+               fda_exec()
+)
+
+#remove spaces from routes term (required for next query)
+routes$term[grepl("[(]",routes$term)]<-gsub(" ","",routes$term[grepl("[(]",routes$term)])
+
+#Remove soft tissue and occlusive dressing- results in query error
+routes<-filter(routes,term!="SOFT TISSUE"&term!="OCCLUSIVE DRESSING TECHNIQUE"&term!="NOT APPLICABLE")
+
+
+#extract submission dates by formulation
+for(i in unique(routes$term)){
+ temp<-fda_query("/drug/label.json") %>%
+   fda_api_key(apikey) %>%
+   fda_filter("openfda.route.exact",i) %>%
+   fda_count("effective_time")%>%
+   fda_exec()
+   temp$route<-i
+
+  ifelse(i==unique(routes$term)[1],out<-temp,out<-rbind(out,temp))
+  cat(paste0("\n route ",i," complete \n"))
+}
+
+
+```
+
+
+
+
+```{r echo=F,cache=T}
+#convert time field to R standard
+out$date<-as.Date(out$time,"%Y%m%d")
+
+#remove dates prior to 2009 (i.e., since onset of SPL format per openFDA) and truncate at 2016 since incomplete year
+
+d<-out%>%filter(date>"2008-12-31"&date<"2016-01-01")
+
+#extract year
+d$year<-format.Date(d$date,"%Y")
+
+#calculate # submissions/year by route
+d.stats<-d%>%group_by(route,year)%>%summarise(Submissions=sum(count))
+
+d.stats$route<-as.factor(d.stats$route)
+d.stats$year<-as.integer(d.stats$year)
+d.stats<-ungroup(d.stats)
+
+#make categories for evaluation
+d.stats$oral<-"Oral drugs"
+d.stats$oral[d.stats$route=="TOPICAL"]<-"Topical drugs"
+d.stats$oral[d.stats$route!="ORAL"&d.stats$route!="TOPICAL"]<-"Other drugs"
+d.stats$oral<-factor(d.stats$oral,levels=c("Oral drugs","Topical drugs","Other drugs"))
+
+#make plot of FDA labeling submissions vs. time
+
+p2<-ggplot(d.stats,aes(y=Submissions,x=year,group=route,color=oral))+geom_line(size=1)+
+      scale_color_manual(values=c("blue","purple","black"))+
+      ylab("Number of Drug Label Submissions")+xlab("Year")+
+      scale_x_continuous(breaks=c(2009:2015))+
+      ggtitle("# of Label Submissions from 2009 to 2015 per OpenFDA")+
+      theme_bw()+ theme(text=element_text(size=15),
+                         title=element_text(face="bold"),
+                         legend.title=element_blank(),legend.position="bottom")
+
+print(p2)
+```
+
+A naive look at the query results could lead one to conclude that there is very little activity in the area of injectable drug development.  However, inspection of the routes retrived from FDA shows that the listing of routes of administration is extensive:
+
+```{r echo=F}
+print(routes$term)
+```
+
+As seen in the list of routes, it is obvious that injectable drugs fall in a variety of subcategories which are used by OpenFDA for classification.  Consequently, the routes were adjudicated on the basis of medical knowledge (I should note that I am a registered pharmacist) and the output re-analyzed:
+
+
+```{r echo=F}
+#classify unique routes (required to due manually based on medical knowledge)
+if(file.exists("../data/OpenfdaRouteExact.csv")==F){
+  write.csv(routes,"../data/OpenfdaRouteExact.csv",row.names=F)
+}
+
+```
+
+
+
+```{r echo=F,cache=T,message=F,warning=F}
+
+#Read in post-manual adjudication
+classified<-read.csv("../data/OpenfdaRouteExact_classified.csv",head=T)
+classified$route<-classified$term
+
+
+classified<-classified%>%select(route,category)%>%right_join(d)
+
+#calculate # submissions/year by route
+c.stats<-classified%>%group_by(category,year)%>%summarise(Submissions=sum(count))
+c.stats$category<-factor(c.stats$category,levels=c("Oral","Topical","Injection","Other"))
+c.stats$year<-as.integer(c.stats$year)
+
+p3<-ggplot(c.stats,aes(y=Submissions,x=year,color=category))+geom_line(size=1)+
+      scale_color_manual(values=c("blue","purple","orangered","black"))+
+      ylab("Number of Drug Label Submissions")+xlab("Year")+
+      scale_x_continuous(breaks=c(2009:2015))+
+      ggtitle("# of Label Submissions by Adjuticated Route (2009 to 2015)")+
+      theme_bw()+ theme(text=element_text(size=15),
+                         title=element_text(face="bold"),
+                         legend.title=element_blank())
+
+print(p3)
+
+```
+
+Although the figure now is less noisy, it still shows the same trend that labeling submissions to the FDA for injectables are lower than the other categories in every year since 2009 and do not show the same growth trajectory as oral and topical drugs.  While this suggests that there is may be an upside to investment in this route of administration by generic manufacturers, it is noted that this data contains both prescription and over-the-counter (OTC) drugs.  This may be skewing the data as the volume of label submissions for OTC drugs is expected to be high due to frequent changes in combination products and branding.  Moreover, many generic manufacturers do not develop or market OTC drugs and thus this may not represent the "true" volume of regulatory submissions for evaluation.  Therefore, in order to have a more direct comparison of the regulatory labeling activity, the queries were re-run to filter for prescription drugs only, with the results shown in the following figure:
+
+```{r echo=F,cache=T,include=F}
+#prescription drugs only
+
+#remove class which cause empty queries and keep distinct names only
+class.names<-classified%>%select(-time:-year)%>%
+  filter(route!="SUBGINGIVAL"&route!="INTRATUMOR")%>%distinct()
+
+#extract submission dates by formulation
+for(i in unique(class.names$route)){
+ temp<-fda_query("/drug/label.json") %>%
+   fda_api_key(apikey) %>%
+   fda_filter("openfda.route.exact",i) %>%
+   fda_filter("openfda.product_type","prescription") %>%
+   fda_count("effective_time")%>%
+   fda_exec()
+   temp$route<-i
+   temp$category<-class.names$category[class.names$route==i]
+
+  ifelse(i==unique(class.names$route)[1],out2<-temp,out2<-rbind(out2,temp))
+  cat(paste0("\n route ",i," complete \n"))
+}
+
+#convert time field to R standard
+out2$date<-as.Date(out2$time,"%Y%m%d")
+
+p<-out2%>%filter(date>"2008-12-31"&date<"2016-01-01")
+
+#extract year
+p$year<-format.Date(p$date,"%Y")
+
+#calculate # submissions/year by route
+p.stats<-p%>%group_by(category,year)%>%summarise(Submissions=sum(count))
+
+p.stats$category<-factor(p.stats$category,levels=c("Oral","Topical","Injection","Other"))
+p.stats$year<-as.integer(p.stats$year)
+
+```
+
+
+```{r echo=F,cache=T}
+
+#Generate plot
+p4<-ggplot(p.stats,aes(y=Submissions,x=year,color=category))+geom_line(size=1)+
+      scale_color_manual(values=c("blue","purple","orangered","black"))+
+      ylab("Number of Prescription Drug Label Submissions")+xlab("Year")+
+      scale_x_continuous(breaks=c(2009:2015))+
+      ggtitle("# of Prescription Drug Labeling Submissions (2009 to 2015)")+
+      theme_bw()+ theme(text=element_text(size=15),
+                         title=element_text(face="bold"),
+                         legend.title=element_blank())
+print(p4)
+
+
+```
+
+After exclusion of OTC drugs, this figure tells a somewhat different story.  While the overall volume of labeling submissions for injectables is essentially unchanged - which is not surprising given the paucity of OTC drugs that are injectables - the relative proportion compared to the other products is markedly different.  Injectables showed the second highest number of labeling submissions in 2015, roughly twice all other non-oral routes combined, but remains significantly lower than oral dosage forms.  As many generic drug manufacturers focus on oral dosage forms such as capsules and tablets, many companies would not be equipped to cover the formulation development needs associated with injectables. However, the above data suggests that diversification of generic drug manufacturers into injectables may be warranted to alleviate the shortage in injectable drugs.
+
+#### Question 3 - What are the market opportunities for the development of new generic injectables?
+
+It is possible that the shortages of injectable drugs, while currently unresolved, may in fact already be in the process of correction.  This is because, despite the advent of the Generic Drug User Fee Act (GDUFA), FDA review timelines for generic drugs are [still on the order of 1 year](http://www.raps.org/Regulatory-Focus/News/2016/03/30/24676/FDA-to-Congress-GDUFA-is-Working/) and thus it is unclear if there are generic drug applications (ANDAs) that may already be in progress.  
+
+In order to make an investment, generic drug companies will have to ensure that the market potential of injectable drugs remains viable even beyond addressing the current shortages.  To explore this possibility, data on the expiration of market drug exclusivity was downloaded from the [FDA Orange Book](http://www.fda.gov/Drugs/InformationOnDrugs/ucm129689.htm) and merged with OpenFDA queries to obtain the routes of administration for the drugs with pending expiration of exclusivity periods.  
+
+
+**Note** - Although approximately half of the queries ran successfully, there were many that failed to locate the corresponding application number.  This is likely due to inconsistent formatting of application numbers within the OpenFDA database.  Consequently, this assessment is considered exploratory only and would need to be re-run for a more comprehensive evaluation.
+
+
+```{r echo=F,cache=T,include=F}
+
+exclusivity<-read.csv("../data/exclusivity.csv",head=T)
+
+exclus<-exclusivity%>%select(-Product_No,-Exclusivity_Code)%>%distinct()
+exclus$date<-as.Date(exclus$Exclusivity_Date,format="%d-%b-%y")
+
+exclus<-filter(exclus,date>"2017-01-01")
+
+if(file.exists("../data/Exclusivityquery.csv")==F){
+  
+## read in patent expiry data from converted .csv file 
+##obtained in .zip form from "http://www.fda.gov/downloads/Drugs/InformationOnDrugs/UCM163762.zip"
+
+for(i in unique(exclus$Appl_No)){  
+  
+  i<-ifelse(nchar(i)==5,paste0(0,i),i)
+  
+ if(
+  is.null(temp<-
+    fda_query("/drug/label.json") %>%
+    fda_api_key(apikey) %>%
+    fda_filter("openfda.application_number",paste0("nda",i)) %>%
+    fda_count("openfda.route.exact")%>%
+    fda_exec()
+  )==T){ next } 
+  
+  temp$Appl_No<-i
+
+  ifelse(exists("out3")==F,out3<-temp,out3<-rbind(out3,temp))
+                                                
+ }
+
+
+  write.csv(out3,"../data/Exclusivityquery.csv",row.names=F)
+} else {
+  
+  out3<-read.csv("../data/Exclusivityquery.csv",head=T)
+  
+}
+
+```
+
+The number of exclusivity periods (note - there may be more than one per drug) through 2025 are shown in the following table and figure:
+
+
+```{r echo=F, cache=T,warning=F,message=F}
+
+#merge with exclusivity dates
+out3$Appl_No<-as.integer(out3$Appl_No)
+
+ex.route<-left_join(exclus,out3)%>%na.omit()
+ex.route$term<-as.character(ex.route$term)
+
+#remove spaces from routes term in order to match
+ex.route$term[grepl("[(]",ex.route$term)]<-gsub(" ","",ex.route$term[grepl("[(]",ex.route$term)])
+ex.route$route<-ex.route$term
+
+ex.route<-left_join(ex.route,class.names)
+
+ex.route$year<-as.numeric(format.Date(ex.route$date,"%Y"))
+
+#
+ex.stats<-ex.route%>%group_by(category,year)%>%summarize(End.Exclus=sum(count))
+
+ex.stats$category<-factor(ex.stats$category,levels=c("Topical","Other","Injection","Oral"))
+
+ex.2025<-ex.stats%>%group_by(category)%>%filter(year<2026)%>%summarise(expirations=sum(End.Exclus))
+
+```
+
+
+##### Table 2. Number of Exclusivity Expirations through 2025 by Route
+
+```{r echo=F,cache=T,message=F,warning=F}
+
+knitr::kable(ex.2025,pad=0)
+
+
+p5<-ggplot(ex.2025,aes(y=expirations,x=category))+geom_bar(stat="density",fill="blue")+
+      ylab("# of Exclusivity Periods Ending")+xlab("Route of Administration")+
+      ggtitle("# of Drug Exclusivity Periods ending through 2025")+
+      theme_bw()+ theme(text=element_text(size=15),
+                         title=element_text(face="bold"),
+                         legend.title=element_blank())
+
+print(p5)
+
+```
+
+Based on the above, it is suggested that even if the current shortages do not last, there may still be an advantage for generic manufacturers which specialize in oral drugs to expand into injectables as there are ~100 new injectable drugs with exclusivity periods ending prior to 2025.  As this is likely an underestimate (refer to earlier note about unreturned queries), the data suggests that there may be multiple opportunities for development of new generics for injectable drugs for which the exclusivity period has expired. 
+
+### Future Directions
+
+This project represents an exploratory feasibility assessment which requires more work to evaluate.  
+
+Future work would include at a minimum:  
+
+* Accounting for factors underlying injectable drug shortages
+* Evaluation of the overall competitive landscape forecast for injectable drugs
+* Assessment of factors that impact the net present value (NPV) of an injectable to inform development cost/profit for a portfolio of injectable drugs. 
+
+  
+  
+    
+```{r echo=F}
+devtools::session_info()
+```
