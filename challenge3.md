@@ -1,11 +1,7 @@
-# DI Challenge
-Alexander Berg, PharmD, PhD  
-`r Sys.Date()`  
-
-
-
-
 # Data Incubator Project Proposal
+
+### Author: Alexander Berg, PharmD, PhD  
+
 
 ## Project - Evaluation of market opportunity in U.S. drug shortages
 
@@ -32,86 +28,84 @@ The overall number of current shortages indicated by the U.S. FDA is 60 as of Ju
 ##### Table 1: Drug shortages per U.S. FDA (June 16, 2016)
 
 
-Table: 
-
-drug                                                                         status               
----------------------------------------------------------------------------  ---------------------
-ACETOHYDROXAMIC ACID (LITHOSTAT) TABLETS                                     Currently in Shortage
-AMMONIUM CHLORIDE INJECTION                                                  Currently in Shortage
-ANAGRELIDE HYDROCHLORIDE CAPSULES                                            Currently in Shortage
-APREPITANT (EMEND) CAPSULES                                                  Resolved             
-ATROPINE SULFATE INJECTION                                                   Currently in Shortage
-AZATHIOPRINE TABLET                                                          Resolved             
-BLEOMYCIN SULFATE FOR INJECTION                                              Currently in Shortage
-CAFFEINE ANHYDROUS (125MG/ML); SODIUM BENZOATE (125MG/ML) INJECTION          Currently in Shortage
-CALCIUM CHLORIDE INJECTION, USP                                              Currently in Shortage
-CALCIUM GLUCONATE INJECTION                                                  Currently in Shortage
-CEFAZOLIN INJECTION                                                          Resolved             
-CEFEPIME INJECTION                                                           Currently in Shortage
-CEFOTAXIME SODIUM (CLAFORAN) INJECTION                                       Currently in Shortage
-CEFOTETAN DISODIUM INJECTION                                                 Currently in Shortage
-CHLORAMPHENICOL SODIUM SUCCINATE INJECTION                                   Currently in Shortage
-CHLOROQUINE PHOSPHATE TABLETS                                                Resolved             
-DESMOPRESSIN ACETATE INJECTION                                               Currently in Shortage
-DEXAMETHASONE SODIUM PHOSPHATE INJECTION                                     Currently in Shortage
-DEXTROSE 5% INJECTION BAGS                                                   Currently in Shortage
-DEXTROSE INJECTION USP, 70%                                                  Currently in Shortage
-DIHYDROERGOTAMINE MESYLATE INJECTION                                         Currently in Shortage
-DISOPYRAMIDE PHOSPHATE (NORPACE) CAPSULES                                    Currently in Shortage
-DOXORUBICIN (ADRIAMYCIN) INJECTION                                           Resolved             
-DOXORUBICIN LYOPHILIZED POWDER FOR INJECTION                                 Currently in Shortage
-EPINEPHRINE INJECTION                                                        Currently in Shortage
-EPTIFIBATIDE (INTEGRILIN) INJECTION                                          Resolved             
-ETHIODIZED OIL (LIPIODOL) INJECTION                                          Currently in Shortage
-FENTANYL CITRATE (SUBLIMAZE) INJECTION                                       Currently in Shortage
-FOMEPIZOLE INJECTION                                                         Currently in Shortage
-GEMIFLOXACIN MESYLATE (FACTIVE) TABLETS                                      Currently in Shortage
-HALOPERIDOL LACTATE INJECTION                                                Resolved             
-IMIPENEM AND CILASTATIN FOR INJECTION, USP                                   Currently in Shortage
-INDIGOTINDISULFONATE SODIUM (INDIGO CARMINE) INJECTION                       Currently in Shortage
-KETOROLAC TROMETHAMINE INJECTION                                             Resolved             
-L-CYSTEINE HYDROCHLORIDE INJECTION                                           Currently in Shortage
-LEUCOVORIN CALCIUM LYOPHILIZED POWDER FOR INJECTION                          Currently in Shortage
-LEUPROLIDE ACETATE INJECTION                                                 Currently in Shortage
-LEVETIRACETAM (KEPPRA) INJECTION                                             Resolved             
-LIDOCAINE HYDROCHLORIDE (XYLOCAINE) INJECTION                                Currently in Shortage
-LIFECARE PCA™ STERILE EMPTY VIAL AND INJECTOR                                Currently in Shortage
-LIOTRIX (THYROLAR) TABLETS                                                   Currently in Shortage
-MECASERMIN [RDNA ORIGIN] (INCRELEX) INJECTION                                Currently in Shortage
-MEMANTINE HYDROCHLORIDE (NAMENDA) XR CAPSULES                                Resolved             
-MEROPENEM FOR INJECTION, USP                                                 Resolved             
-METHYLDOPATE HYDROCHLORIDE INJECTION                                         Currently in Shortage
-METHYLPHENIDATE HYDROCHLORIDE ER CAPSULES/TABLETS                            Resolved             
-METHYLPREDNISOLONE SODIUM SUCCINATE FOR INJECTION, USP                       Currently in Shortage
-METOPROLOL INJECTION                                                         Resolved             
-MORPHINE SULFATE INJECTION, USP, CII, (PRESERVATIVE-FREE)(FOR PCA USE ONLY)  Currently in Shortage
-MULTI-VITAMIN INFUSION (ADULT AND PEDIATRIC)                                 Currently in Shortage
-MUPIROCIN CALCIUM NASAL OINTMENT                                             Currently in Shortage
-NEBIVOLOL (BYSTOLIC) TABLETS                                                 Resolved             
-NIMODIPINE (NYMALIZE) ORAL SOLUTION                                          Currently in Shortage
-PENICILLIN G BENZATHINE (BICILLIN L-A) INJECTION                             Currently in Shortage
-PERITONEAL DIALYSIS SOLUTIONS                                                Currently in Shortage
-PHENTOLAMINE MESYLATE INJECTION                                              Resolved             
-PIPERACILLIN AND TAZOBACTAM (ZOSYN) INJECTION                                Currently in Shortage
-POTASSIUM ACETATE INJECTION, USP                                             Resolved             
-POTASSIUM CHLORIDE INJECTION                                                 Currently in Shortage
-RESERPINE TABLETS                                                            Currently in Shortage
-SACROSIDASE (SUCRAID) ORAL SOLUTION                                          Currently in Shortage
-SODIUM ACETATE INJECTION, USP                                                Currently in Shortage
-SODIUM BICARBONATE INJECTION, USP                                            Currently in Shortage
-SODIUM CHLORIDE 0.9% INJECTION BAGS                                          Currently in Shortage
-SODIUM CHLORIDE 23.4% INJECTION                                              Currently in Shortage
-SUFENTANIL CITRATE (SUFENTA) INJECTION                                       Currently in Shortage
-SUMATRIPTAN (IMITREX) NASAL SPRAY                                            Currently in Shortage
-TECHNETIUM TC99M SUCCIMER INJECTION (DMSA)                                   Currently in Shortage
-THEOPHYLLINE EXTENDED RELEASE TABLETS AND CAPSULES                           Currently in Shortage
-TIGECYCLINE (TYGACIL) INJECTION                                              Currently in Shortage
-TIOPRONIN (THIOLA)                                                           Resolved             
-TOBRAMYCIN INJECTION                                                         Currently in Shortage
-TRETINOIN CAPSULES                                                           Currently in Shortage
-TRIAMCINOLONE HEXACETONIDE INJECTABLE SUSPENSION (ARISTOSPAN)                Currently in Shortage
-TRIMIPRAMINE MALEATE (SURMONTIL) CAPSULES                                    Currently in Shortage
-VANCOMYCIN HYDROCHLORIDE FOR INJECTION, USP                                  Currently in Shortage
+|drug                                                                       |status               |
+|:--------------------------------------------------------------------------|:--------------------|
+|ACETOHYDROXAMIC ACID (LITHOSTAT) TABLETS                                   |Currently in Shortage|
+|AMMONIUM CHLORIDE INJECTION                                                |Currently in Shortage|
+|ANAGRELIDE HYDROCHLORIDE CAPSULES                                          |Currently in Shortage|
+|APREPITANT (EMEND) CAPSULES                                                |Resolved             |
+|ATROPINE SULFATE INJECTION                                                 |Currently in Shortage|
+|AZATHIOPRINE TABLET                                                        |Resolved             |
+|BLEOMYCIN SULFATE FOR INJECTION                                            |Currently in Shortage|
+|CAFFEINE ANHYDROUS (125MG/ML); SODIUM BENZOATE (125MG/ML) INJECTION        |Currently in Shortage|
+|CALCIUM CHLORIDE INJECTION, USP                                            |Currently in Shortage|
+|CALCIUM GLUCONATE INJECTION                                                |Currently in Shortage|
+|CEFAZOLIN INJECTION                                                        |Resolved             |
+|CEFEPIME INJECTION                                                         |Currently in Shortage|
+|CEFOTAXIME SODIUM (CLAFORAN) INJECTION                                     |Currently in Shortage|
+|CEFOTETAN DISODIUM INJECTION                                               |Currently in Shortage|
+|CHLORAMPHENICOL SODIUM SUCCINATE INJECTION                                 |Currently in Shortage|
+|CHLOROQUINE PHOSPHATE TABLETS                                              |Resolved             |
+|DESMOPRESSIN ACETATE INJECTION                                             |Currently in Shortage|
+|DEXAMETHASONE SODIUM PHOSPHATE INJECTION                                   |Currently in Shortage|
+|DEXTROSE 5% INJECTION BAGS                                                 |Currently in Shortage|
+|DEXTROSE INJECTION USP, 70%                                                |Currently in Shortage|
+|DIHYDROERGOTAMINE MESYLATE INJECTION                                       |Currently in Shortage|
+|DISOPYRAMIDE PHOSPHATE (NORPACE) CAPSULES                                  |Currently in Shortage|
+|DOXORUBICIN (ADRIAMYCIN) INJECTION                                         |Resolved             |
+|DOXORUBICIN LYOPHILIZED POWDER FOR INJECTION                               |Currently in Shortage|
+|EPINEPHRINE INJECTION                                                      |Currently in Shortage|
+|EPTIFIBATIDE (INTEGRILIN) INJECTION                                        |Resolved             |
+|ETHIODIZED OIL (LIPIODOL) INJECTION                                        |Currently in Shortage|
+|FENTANYL CITRATE (SUBLIMAZE) INJECTION                                     |Currently in Shortage|
+|FOMEPIZOLE INJECTION                                                       |Currently in Shortage|
+|GEMIFLOXACIN MESYLATE (FACTIVE) TABLETS                                    |Currently in Shortage|
+|HALOPERIDOL LACTATE INJECTION                                              |Resolved             |
+|IMIPENEM AND CILASTATIN FOR INJECTION, USP                                 |Currently in Shortage|
+|INDIGOTINDISULFONATE SODIUM (INDIGO CARMINE) INJECTION                     |Currently in Shortage|
+|KETOROLAC TROMETHAMINE INJECTION                                           |Resolved             |
+|L-CYSTEINE HYDROCHLORIDE INJECTION                                         |Currently in Shortage|
+|LEUCOVORIN CALCIUM LYOPHILIZED POWDER FOR INJECTION                        |Currently in Shortage|
+|LEUPROLIDE ACETATE INJECTION                                               |Currently in Shortage|
+|LEVETIRACETAM (KEPPRA) INJECTION                                           |Resolved             |
+|LIDOCAINE HYDROCHLORIDE (XYLOCAINE) INJECTION                              |Currently in Shortage|
+|LIFECARE PCA™ STERILE EMPTY VIAL AND INJECTOR                              |Currently in Shortage|
+|LIOTRIX (THYROLAR) TABLETS                                                 |Currently in Shortage|
+|MECASERMIN [RDNA ORIGIN] (INCRELEX) INJECTION                              |Currently in Shortage|
+|MEMANTINE HYDROCHLORIDE (NAMENDA) XR CAPSULES                              |Resolved             |
+|MEROPENEM FOR INJECTION, USP                                               |Resolved             |
+|METHYLDOPATE HYDROCHLORIDE INJECTION                                       |Currently in Shortage|
+|METHYLPHENIDATE HYDROCHLORIDE ER CAPSULES/TABLETS                          |Resolved             |
+|METHYLPREDNISOLONE SODIUM SUCCINATE FOR INJECTION, USP                     |Currently in Shortage|
+|METOPROLOL INJECTION                                                       |Resolved             |
+|MORPHINE SULFATE INJECTION, USP, CII, (PRESERVATIVE-FREE)(FOR PCA USE ONLY)|Currently in Shortage|
+|MULTI-VITAMIN INFUSION (ADULT AND PEDIATRIC)                               |Currently in Shortage|
+|MUPIROCIN CALCIUM NASAL OINTMENT                                           |Currently in Shortage|
+|NEBIVOLOL (BYSTOLIC) TABLETS                                               |Resolved             |
+|NIMODIPINE (NYMALIZE) ORAL SOLUTION                                        |Currently in Shortage|
+|PENICILLIN G BENZATHINE (BICILLIN L-A) INJECTION                           |Currently in Shortage|
+|PERITONEAL DIALYSIS SOLUTIONS                                              |Currently in Shortage|
+|PHENTOLAMINE MESYLATE INJECTION                                            |Resolved             |
+|PIPERACILLIN AND TAZOBACTAM (ZOSYN) INJECTION                              |Currently in Shortage|
+|POTASSIUM ACETATE INJECTION, USP                                           |Resolved             |
+|POTASSIUM CHLORIDE INJECTION                                               |Currently in Shortage|
+|RESERPINE TABLETS                                                          |Currently in Shortage|
+|SACROSIDASE (SUCRAID) ORAL SOLUTION                                        |Currently in Shortage|
+|SODIUM ACETATE INJECTION, USP                                              |Currently in Shortage|
+|SODIUM BICARBONATE INJECTION, USP                                          |Currently in Shortage|
+|SODIUM CHLORIDE 0.9% INJECTION BAGS                                        |Currently in Shortage|
+|SODIUM CHLORIDE 23.4% INJECTION                                            |Currently in Shortage|
+|SUFENTANIL CITRATE (SUFENTA) INJECTION                                     |Currently in Shortage|
+|SUMATRIPTAN (IMITREX) NASAL SPRAY                                          |Currently in Shortage|
+|TECHNETIUM TC99M SUCCIMER INJECTION (DMSA)                                 |Currently in Shortage|
+|THEOPHYLLINE EXTENDED RELEASE TABLETS AND CAPSULES                         |Currently in Shortage|
+|TIGECYCLINE (TYGACIL) INJECTION                                            |Currently in Shortage|
+|TIOPRONIN (THIOLA)                                                         |Resolved             |
+|TOBRAMYCIN INJECTION                                                       |Currently in Shortage|
+|TRETINOIN CAPSULES                                                         |Currently in Shortage|
+|TRIAMCINOLONE HEXACETONIDE INJECTABLE SUSPENSION (ARISTOSPAN)              |Currently in Shortage|
+|TRIMIPRAMINE MALEATE (SURMONTIL) CAPSULES                                  |Currently in Shortage|
+|VANCOMYCIN HYDROCHLORIDE FOR INJECTION, USP                                |Currently in Shortage|
 
 It is apparent per the table that there is a large representation of drugs that are administered as an injection.  This is seen in the following figure:
 
@@ -229,13 +223,12 @@ The number of exclusivity periods (note - there may be more than one per drug) t
 
 ##### Table 2. Number of Exclusivity Expirations through 2025 by Route
 
-
-category   expirations
----------  -----------
-Topical             36
-Other               68
-Injection           99
-Oral               580
+|category |expirations|
+|:--------|----------:|
+|Topical  |         36|
+|Other    |         68|
+|Injection|         99|
+|Oral     |        580|
 
 ![](challenge3_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
